@@ -1,0 +1,90 @@
+#include <SoftwareSerial.h>
+#include <SD.h>
+#include <SPI.h>
+#include <Wire.h>
+
+int fsrPin = 0;     // the pin that the FSR is reading from
+int fsrReading;     
+
+SoftwareSerial bluetoothSerial(4, 3);
+ 
+void setup(void) {
+  Serial.begin(9600);   // We'll send debugging information via the Serial monitor
+  bluetoothSerial.begin(115200); //
+  Wire.begin();
+  delay(1000);
+}
+ 
+void loop(void) {
+
+  //######################################## ACCEL AND GYRO ################################################
+  //WIP, I can't seem to get things to update yet
+  Wire.requestFrom(0x14, 6);    // request 6 bytes from slave device 0x1D. This address is obtained from the datasheet for the gyroscope
+  while(Wire.available())    // slave may send less than requested
+  { 
+    int rawData[6];
+    for(int i = 0; i <=6; i++){
+      byte test = Wire.read();
+      //rawData[i] = Wire.read();
+      Serial.println(test);
+      bluetoothSerial.println(test);
+    }
+    //rawData = Wire.read();    // receive a byte
+    Serial.println("Accel & Gyro:");
+    bluetoothSerial.println("Accel & Gyro:");
+    int x = (rawData[0]<<8 | rawData[1]) >> 4;
+    int y = (rawData[2]<<8 | rawData[3]) >> 4;
+    int z = (rawData[4]<<8 | rawData[5]) >> 4;
+    float cx = (float) x / (float)(1<<11) * (float)(2);
+    float cy = (float) y / (float)(1<<11) * (float)(2);
+    float cz = (float) z / (float)(1<<11) * (float)(2);
+
+    Serial.print(x);
+    Serial.print(" ");
+    Serial.print(y);
+    Serial.print(" ");
+    Serial.print(z);
+    Serial.print(" ");
+    Serial.print(cx);
+    Serial.print(" ");
+    Serial.print(cy);
+    Serial.print(" ");
+    Serial.print(cz);
+
+    bluetoothSerial.print(x);
+    bluetoothSerial.print(" ");
+    bluetoothSerial.print(y);
+    bluetoothSerial.print(" ");
+    bluetoothSerial.print(z);
+    bluetoothSerial.print(" ");
+    bluetoothSerial.print(cx);
+    bluetoothSerial.print(" ");
+    bluetoothSerial.print(cy);
+    bluetoothSerial.print(" ");
+    bluetoothSerial.print(cz);
+  }
+  //########################################################################################################
+
+
+
+
+  
+  //######################################## FORCE SENSATIVE RESISTOR ######################################
+
+  //The difficult part of using an FSR, is that there is no way, mathimatically to get pounds based on voltage
+  //Therefore, what you are really looking for is how much voltage the FSR is blocking (blocks more the less weight applied)
+  //And from there, you calibrate it with known weights to find what conductance = weight. It will take many if statements for different calibrations
+  //to narrow down
+  
+  //This currently only gives a a single analong reading. The low pulldown resistor on the device makes sure that 
+  //the FSR does not max out on weights upwards of 200lbs.
+  fsrReading = analogRead(fsrPin);  
+  Serial.print("Analog reading = ");
+  Serial.println(fsrReading);
+
+  bluetoothSerial.print("Analog reading = ");
+  bluetoothSerial.println(fsrReading);
+
+
+  delay(1000);
+}
