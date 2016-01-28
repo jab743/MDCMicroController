@@ -2,7 +2,7 @@
 TARGET = $(notdir $(CURDIR))
 
 # The teensy version to use, 30, 31, or LC
-TEENSY = 30
+TEENSY = 31
 
 # Set to 24000000, 48000000, or 96000000 to set CPU core speed
 TEENSY_CORE_SPEED = 48000000
@@ -24,7 +24,8 @@ BUILDDIR = $(abspath $(CURDIR)/build)
 #************************************************************************
 
 # path location for Teensy Loader, teensy_post_compile and teensy_reboot
-TOOLSPATH = $(CURDIR)/tools
+#TOOLSPATH = $(CURDIR)/tools
+TOOLSPATH = /Applications/Arduino.app/Contents/Java/hardware/tools/
 
 ifeq ($(OS),Windows_NT)
     $(error What is Win Dose?)

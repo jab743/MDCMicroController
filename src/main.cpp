@@ -4,7 +4,7 @@ extern "C" int main(void)
 {
 #ifdef USING_MAKEFILE
 
-	// To use Teensy 3.0 without Arduino, simply put your code here.
+    // To use Teensy 3.0 without Arduino, simply put your code here.
 	// For example:
 
 	pinMode(13, OUTPUT);
@@ -17,12 +17,12 @@ extern "C" int main(void)
 
 
 #else
-	// Arduino's main() function just calls setup() and loop()....
-	setup();
-	while (1) {
-		loop();
-		yield();
-	}
+    // Arduino's main() function just calls setup() and loop()....
+    setup();
+    while (1) {
+        loop();
+        yield();
+    }
 #endif
 }
 
